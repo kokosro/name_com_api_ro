@@ -51,12 +51,14 @@ function name_com(account, api_token){
   }
 
   function nimic(){
+    log("facem nimic");
     return null;
   };
   function am_intrat_in_paine(){
     log("am intrat in paine");
     _s_a_facut_cerere_de_intrare_in_paine = false;
     facem_coada(_coada);
+
   }
   function proceseaza_raspuns(impreuna_cu){
     return function(err, resp, body){
@@ -119,11 +121,11 @@ function name_com(account, api_token){
   function punem_in_coada(cerere){
     log("punem in coada "+cerere("eticheta"));
     _coada[cerere("eticheta")] = cerere();
-    return _coada;
+    return cerere("eticheta");
   }
   function intra_in_paine(){
 
-    facem_coada(punem_in_coada(etichetam(preluam_cererea({
+    facem(punem_in_coada(etichetam(preluam_cererea({
       nume: "/login",
       bagaj: _cuvantul_magic,
       raspuns: nimic,
@@ -154,28 +156,32 @@ function name_com(account, api_token){
     return cerere("de_la_presedinte")||suntem_in_paine();
   }
   function elibereaza_coada(eticheta){
-    log("eliberam coada de "+eticheta);
-    log(_coada[eticheta]("nume"));
-    _coada[eticheta] = null;
-    delete _coada[eticheta];
+    if(_coada[eticheta]){
+      log("eliberam coada de "+eticheta);
+      log(_coada[eticheta]("nume"));
+      _coada[eticheta] = null;
+      delete _coada[eticheta];
+    }
   }
   function facem(eticheta){
     log("facem "+eticheta);
     var cerere = _coada[eticheta]();
     cerere();
 
-    setTimeout(elibereaza_coada, 100, eticheta);
+    elibereaza_coada(eticheta);
   }
   function asteptam(eticheta){
     log("asteptam: "+eticheta);
   }
-  function facem_coada(coada){
+  function facem_coada(){
     log("facem coada");
-    for(var eticheta in coada){
+    for(var eticheta in _coada){
       log("incercam "+eticheta);
-      se_poate_face(coada[eticheta])?
-        facem(eticheta):
-        asteptam(eticheta);
+      if(se_poate_face(_coada[eticheta])){
+        facem(eticheta);
+      }else{
+        break;
+      }
     }
   }
   function preluam_cererea(cerere){
