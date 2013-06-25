@@ -45,7 +45,7 @@ function name_com(account, api_token){
     if(arguments[0]){
       s_token = arguments[0];
       default_headers(s_token);
-      _s_a_facut_cerere_de_intrare_in_paine = false;
+
     }
     return s_token;
   }
@@ -54,6 +54,7 @@ function name_com(account, api_token){
     return null;
   };
   function am_intrat_in_paine(){
+    _s_a_facut_cerere_de_intrare_in_paine = false;
     facem_coada(_coada);
   }
   function proceseaza_raspuns(impreuna_cu){
