@@ -54,15 +54,15 @@ function name_com(account, api_token){
     return null;
   };
   function am_intrat_in_paine(){
+    log("am intrat in paine");
     _s_a_facut_cerere_de_intrare_in_paine = false;
     facem_coada(_coada);
   }
   function proceseaza_raspuns(impreuna_cu){
     return function(err, resp, body){
-      log(err);
-      log("procesam raspuns");
+      log("se proceseaza raspunsul ");
       var raspuns = JSON.parse(body);
-      log(body);
+//      log(body);
       if(raspuns.session_token){
         session_token(raspuns.session_token);
         am_intrat_in_paine();
@@ -72,9 +72,9 @@ function name_com(account, api_token){
 
   }
   function cerere_fara_bagaj(cerere){
+    log("o cerere fara bagaj: "+cerere.nume);
     return function(){
-      log(default_headers());
-      log("doing the request GET "+cerere.nume);
+
       request({
         url: url_name_com+cerere.nume,
         method: "GET",
@@ -84,10 +84,8 @@ function name_com(account, api_token){
     }
   }
   function cerere_cu_bagaj(cerere){
-
+    log("o cerere cu bagaj");
     return function(){
-      log("doing the request POST "+cerere.nume);
-            log(default_headers());
       request({
         url: url_name_com+cerere.nume,
         method: "POST",
@@ -98,6 +96,7 @@ function name_com(account, api_token){
     }
   }
   function creaza(cerere){
+    log("se creaza cererea "+cerere.nume);
     return cerere.bagaj?
       ( cerere_cu_bagaj(cerere)):
       ( cerere_fara_bagaj(cerere));
@@ -106,7 +105,9 @@ function name_com(account, api_token){
     return (numar+cat);
   }
   function etichetam(cerere){
+    log("etichetam");
     var eticheta = (_numarul_de_cereri_de_pana_acum = adauga_la(_numarul_de_cereri_de_pana_acum, 1));
+    log(cerere("nume")+" eticheta: "+eticheta);
     return function(vreau){
       return vreau?
         (vreau=="eticheta"?
@@ -116,10 +117,12 @@ function name_com(account, api_token){
     }
   }
   function punem_in_coada(cerere){
+    log("punem in coada "+cerere("eticheta"));
     _coada[cerere("eticheta")] = cerere();
     return _coada;
   }
   function intra_in_paine(){
+
     facem_coada(punem_in_coada(etichetam(preluam_cererea({
       nume: "/login",
       bagaj: _cuvantul_magic,
@@ -128,30 +131,38 @@ function name_com(account, api_token){
     }))));
   }
   function trimite_cerere_de_intrare_in_paine(){
+    log("trimite cererea de intrare in paine");
     _s_a_facut_cerere_de_intrare_in_paine = true;
     intra_in_paine();
     return false;
   }
   function intram_in_paine(){
+    log("intram in paine");
     return _s_a_facut_cerere_de_intrare_in_paine?
        false:
        trimite_cerere_de_intrare_in_paine();
   }
   function suntem_in_paine(){
+    log("suntem in paine?");
     if(s_token != ""){
       return true;
     }
     return intram_in_paine();
   }
   function se_poate_face(cerere){
+    log("se poate face cererea?");
     return cerere("de_la_presedinte")||suntem_in_paine();
   }
   function elibereaza_coada(eticheta){
+    log("eliberam coada de "+eticheta);
+    log(_coada[eticheta]("nume"));
     _coada[eticheta] = null;
     delete _coada[eticheta];
   }
   function facem(eticheta){
-    _coada[eticheta]()();
+    log("facem "+eticheta);
+    var cerere = _coada[eticheta]();
+    cerere();
 
     setTimeout(elibereaza_coada, 100, eticheta);
   }
