@@ -24,7 +24,7 @@ function name_com(account, api_token){
   if(arguments[2]){
       url_name_com = "https://api.dev.name.com/api"
   }
-  var debug = true;
+  var debug = arguments[2];
   function log(spune){
     if(debug){
       console.log(spune);
