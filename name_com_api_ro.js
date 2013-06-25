@@ -1,8 +1,8 @@
 /*
 
-  Name.com api story,
-  Written by Robert Doroftei
-  for node.js
+  Povestea api ului Name.com,
+  Scrisa de Robert Doroftei
+  pentru node.js
 
 */
 var request = require("request");
