@@ -172,6 +172,7 @@ function name_com(account, api_token){
   }
   function asteptam(eticheta){
     log("asteptam: "+eticheta);
+    return false;
   }
   function facem_coada(){
     log("facem coada");
@@ -180,9 +181,11 @@ function name_com(account, api_token){
       if(se_poate_face(_coada[eticheta])){
         facem(eticheta);
       }else{
-        break;
+        return asteptam(eticheta);
+
       }
     }
+    return true;
   }
   function preluam_cererea(cerere){
     log("preluam cererea");
